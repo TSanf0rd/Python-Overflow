@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browse Python Libraries</title>
+</head>
+<body>
+    <h2>Browse Python Libraries</h2>
+
+    <form method="GET" action="/browse">
+        <input type="text" name="search" placeholder="Search by name or category" value="{{ request.args.get('search', '') }}">
+        <select name="license">
+            <option value="">-- Filter by License --</option>
+            {% for lic in licenses %}
+                <option value="{{ lic }}" {% if lic == request.args.get('license') %}selected{% endif %}>{{ lic }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Search</button>
+    </form>
+
+    <hr>
+
+    {% if results %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Library Name</th>
+                    <th>Category</th>
+                    <th>License</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lib in results %}
+                <tr>
+                    <td><a href="/library/{{ lib[0] }}">{{ lib[1] }}</a></td>
+                    <td>{{ lib[2] }}</td>
+                    <td>{{ lib[3] }}</td>
+                    <td>{{ lib[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No libraries found.</p>
+    {% endif %}
+
+    <br><a href="/">⬅ Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SQL Admin Interface</title>
+</head>
+<body>
+    <h2>SQL Query Tool (for admins)</h2>
+    <form method="POST" action="/execute">
+        <textarea name="sql" rows="10" cols="80">{{ query or '' }}</textarea><br>
+        <input type="submit" value="Run Query">
+    </form>
+
+    {% if result %}
+        <h3>Result:</h3>
+        {% if result is string %}
+            <pre>{{ result }}</pre>
+        {% else %}
+            <table border="1">
+                <thead>
+                    <tr>
+                        {% for col in result.columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in result.rows %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endif %}
+
+    <br><a href="/">Back to Home</a>
+</body>
+</html>

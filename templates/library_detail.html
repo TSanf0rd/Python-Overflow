@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ library[0] }} - Details</title>
+</head>
+<body>
+    <h1>{{ library[0] }}</h1>
+    <p><strong>Category:</strong> {{ library[1] }}</p>
+    <p><strong>Description:</strong> {{ library[2] }}</p>
+    <p><strong>License:</strong> {{ library[3] }}</p>
+    <p><strong>Install:</strong> {{ library[4] }}</p>
+    <p><strong>Author:</strong> {{ library[5] }}</p>
+    <p><strong>Docs:</strong> <a href="{{ library[6] }}" target="_blank">{{ library[6] }}</a></p>
+
+    <h3>Tags</h3>
+    {% if tags %}
+        <ul>
+        {% for tag in tags %}
+            <li>{{ tag[1] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tags assigned.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Functions</h3>
+    {% if functions %}
+        <ul>
+        {% for func in functions %}
+            <li><strong>{{ func[0] }}</strong>: {{ func[1] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No functions listed.</p>
+    {% endif %}
+
+    <h3>Modules</h3>
+    {% if modules %}
+        <ul>
+        {% for mod in modules %}
+            <li><strong>{{ mod[0] }}</strong>: {{ mod[1] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No modules listed.</p>
+    {% endif %}
+
+    <h3>Versions & Contributors</h3>
+    {% if versions %}
+        <ul>
+        {% for ver in versions %}
+            <li>
+                Version {{ ver[0] }} — {{ ver[1] }}<br>
+                <em>{{ ver[2] }}</em><br>
+                Contributors:
+                <ul>
+                    {% for c in contributors if c[0] == ver[0] %}
+                        <li>{{ c[1] }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No version history.</p>
+    {% endif %}
+
+    <h3>Dependencies</h3>
+    {% if dependencies %}
+        <ul>
+        {% for dep in dependencies %}
+            <li>{{ dep[0] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No dependencies listed.</p>
+    {% endif %}
+
+    <h3>Related Libraries</h3>
+    {% if related %}
+        <ul>
+        {% for lib in related %}
+            <li><a href="/library/{{ lib[0] }}">{{ lib[1] }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No related libraries found.</p>
+    {% endif %}
+
+    <br><a href="/browse">⬅ Back to Browse</a>
+</body>
+</html>

@@ -1,7 +1,19 @@
 from flask import Flask, render_template, request
+from flask import redirect, url_for, flash, session
 import sqlite3
 
+from flask_login import (
+    LoginManager, UserMixin, login_user, login_required,
+    logout_user, current_user
+)
+
+
 app = Flask(__name__)
+app.secret_key = 'supersecretkey123'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 DB_PATH = "library.db"
 
 # --- Home Route ---
@@ -55,6 +67,7 @@ def browse():
 
 # --- SQL Query Tool (Admin Access) ---
 @app.route('/execute', methods=['GET', 'POST'])
+@login_required
 def execute():
     query = ""
     result = ""
@@ -150,6 +163,45 @@ def library_detail(lib_id):
                            tags=tags,
                            related=related)
 
+
+
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+        self.name = "admin"
+        self.password = "adminpass"
+
+# Temporary user store
+users = {"admin": User(id="admin")}
+
+@login_manager.user_loader
+def load_user(user_id):
+    return users.get(user_id)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = users.get(username)
+
+        if user and password == user.password:
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password')
+
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
 # --- Run Flask Server ---
 if __name__ == "__main__":
     app.run(debug=True)
+
+

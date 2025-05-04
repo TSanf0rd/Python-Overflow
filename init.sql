@@ -64,6 +64,14 @@ CREATE TABLE IF NOT EXISTS supported_versions (
     FOREIGN KEY (version_id) REFERENCES version(version_id)
 );
 
+CREATE TABLE IF NOT EXISTS feedback (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    message TEXT,
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 -- RELATIONSHIPS
 CREATE TABLE IF NOT EXISTS dependency (
     lib_id INT NOT NULL,
@@ -125,3 +133,65 @@ VALUES
 INSERT INTO dependency (lib_id, depend_id)
 VALUES
 (1, 2);
+
+-- Add new libraries
+INSERT INTO library (lib_id, category, lib_name, lib_description, license, install_instructions, author, doc_url)
+VALUES
+(3, 'Visualization', 'Matplotlib', 'Comprehensive library for creating static, animated, and interactive plots.', 'PSF', 'pip install matplotlib', 'John Hunter', 'https://matplotlib.org/stable/contents.html'),
+(4, 'Machine Learning', 'Scikit-learn', 'Simple and efficient tools for predictive data analysis and modeling.', 'BSD', 'pip install scikit-learn', 'INRIA', 'https://scikit-learn.org/stable/'),
+(5, 'Networking', 'Requests', 'Elegant and simple HTTP library for Python, built for human beings.', 'Apache 2.0', 'pip install requests', 'Kenneth Reitz', 'https://requests.readthedocs.io/en/latest/');
+
+-- Add functions
+INSERT INTO function (func_name, source_code, func_description, lib_id)
+VALUES
+('plot', NULL, 'Plots y vs. x as lines and/or markers.', 3),
+('fit', NULL, 'Fits the model to training data.', 4),
+('get', NULL, 'Sends a GET request to the specified URL.', 5);
+
+-- Add types
+INSERT INTO types (type_name, type_code, type_description, lib_id)
+VALUES
+('Figure', NULL, 'Top-level container for all plot elements.', 3),
+('Estimator', NULL, 'Base class for all estimators in scikit-learn.', 4),
+('Response', NULL, 'The response object returned by requests.', 5);
+
+-- Add modules
+INSERT INTO modules (mod_id, mod_name, mod_code, mod_description, lib_id)
+VALUES
+(3, 'matplotlib.pyplot', NULL, 'Provides a MATLAB-like plotting framework.', 3),
+(4, 'sklearn.linear_model', NULL, 'Implements linear regression models.', 4),
+(5, 'requests.api', NULL, 'Core HTTP methods for Requests.', 5);
+
+-- Add versions
+INSERT INTO version (version_id, release_date, change_log, lib_id)
+VALUES
+(3, '2023-02-01', 'Added support for interactive figures.', 3),
+(4, '2023-04-10', 'Improved accuracy of classifiers.', 4),
+(5, '2023-05-12', 'Added support for HTTP/2.', 5);
+
+-- Add contributors
+INSERT INTO contributors (con_id, con, ver_id)
+VALUES
+(3, 'Michael Droettboom', 3),
+(4, 'Gaël Varoquaux', 4),
+(5, 'Kenneth Reitz', 5);
+
+-- Add tags
+INSERT INTO tag (tag_id, tag_name, description)
+VALUES
+(3, 'visualization', 'Used for rendering plots and charts.'),
+(4, 'ml', 'Used for training and evaluating predictive models.'),
+(5, 'http', 'Used for making web requests and handling responses.');
+
+-- Map tags to libraries
+INSERT INTO lib_tag (lib_id, tag_id)
+VALUES
+(3, 3),
+(4, 4),
+(5, 5);
+
+-- Add dependencies
+INSERT INTO dependency (lib_id, depend_id)
+VALUES
+(4, 2);  -- Scikit-learn depends on NumPy
+

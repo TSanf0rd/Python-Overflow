@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Add New Library{% endblock %}
+{% block content %}
+<h2>Add New Library</h2>
+<form method="POST" action="">
+    <label>Name:</label><br>
+    <input type="text" name="lib_name" required><br><br>
+
+    <label>Category:</label><br>
+    <input type="text" name="category"><br><br>
+
+    <label>Description:</label><br>
+    <textarea name="lib_description" required></textarea><br><br>
+
+    <label>License:</label><br>
+    <input type="text" name="license" required><br><br>
+
+    <label>Install Instructions:</label><br>
+    <textarea name="install_instructions" required></textarea><br><br>
+
+    <label>Author:</label><br>
+    <input type="text" name="author" required><br><br>
+
+    <label>Documentation URL:</label><br>
+    <input type="url" name="doc_url"><br><br>
+
+    <button type="submit">Add Library</button>
+</form>
+<a href="{{ url_for('manage_libraries') }}">⬅ Back to Admin Libraries</a>
+{% endblock %}

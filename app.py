@@ -7,7 +7,6 @@ from flask_login import (
     logout_user, current_user
 )
 
-
 app = Flask(__name__)
 app.secret_key = 'supersecretkey123'
 login_manager = LoginManager()
@@ -21,6 +20,12 @@ DB_PATH = "library.db"
 def home():
     return render_template("home.html")
 
+# --- Admin Dashboard ---
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    return render_template("admin_dashboard.html")
+
 # --- Browse/Search Route ---
 @app.route('/browse')
 def browse():
@@ -31,14 +36,12 @@ def browse():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        # Get distinct license and tag values
         cursor.execute("SELECT DISTINCT license FROM library")
         licenses = [row[0] for row in cursor.fetchall()]
 
         cursor.execute("SELECT tag_id, tag_name FROM tag")
         tags = cursor.fetchall()
 
-        # Build base query
         query = """
             SELECT DISTINCT library.lib_id, library.lib_name, library.category, library.license, library.author
             FROM library
@@ -96,26 +99,21 @@ def library_detail(lib_id):
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        # Library core info
         cursor.execute("""
             SELECT lib_name, category, lib_description, license, install_instructions, author, doc_url
             FROM library WHERE lib_id = ?
         """, (lib_id,))
         library = cursor.fetchone()
 
-        # Functions
         cursor.execute("SELECT func_name, func_description FROM function WHERE lib_id = ?", (lib_id,))
         functions = cursor.fetchall()
 
-        # Modules
         cursor.execute("SELECT mod_name, mod_description FROM modules WHERE lib_id = ?", (lib_id,))
         modules = cursor.fetchall()
 
-        # Versions
         cursor.execute("SELECT version_id, release_date, change_log FROM version WHERE lib_id = ?", (lib_id,))
         versions = cursor.fetchall()
 
-        # Contributors by version
         cursor.execute("""
             SELECT version.version_id, contributors.con
             FROM contributors
@@ -124,7 +122,6 @@ def library_detail(lib_id):
         """, (lib_id,))
         contributors = cursor.fetchall()
 
-        # Dependencies
         cursor.execute("""
             SELECT l2.lib_name 
             FROM dependency d
@@ -133,7 +130,6 @@ def library_detail(lib_id):
         """, (lib_id,))
         dependencies = cursor.fetchall()
 
-        # Tags for this library
         cursor.execute("""
             SELECT tag.tag_id, tag.tag_name
             FROM tag
@@ -142,7 +138,6 @@ def library_detail(lib_id):
         """, (lib_id,))
         tags = cursor.fetchall()
 
-        # Related libraries with shared tags
         cursor.execute("""
             SELECT DISTINCT l.lib_id, l.lib_name
             FROM library l
@@ -163,15 +158,12 @@ def library_detail(lib_id):
                            tags=tags,
                            related=related)
 
-
-
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
         self.name = "admin"
         self.password = "adminpass"
 
-# Temporary user store
 users = {"admin": User(id="admin")}
 
 @login_manager.user_loader
@@ -199,9 +191,146 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/admin/libraries')
+@login_required
+def manage_libraries():
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT lib_id, lib_name, category, license FROM library")
+        libraries = cursor.fetchall()
+    return render_template("admin_libraries.html", libraries=libraries)
+
+@app.route('/admin/library/add', methods=['GET', 'POST'])
+@login_required
+def add_library():
+    if request.method == 'POST':
+        data = (
+            request.form['category'],
+            request.form['lib_name'],
+            request.form['lib_description'],
+            request.form['license'],
+            request.form['install_instructions'],
+            request.form['author'],
+            request.form['doc_url']
+        )
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO library (category, lib_name, lib_description, license, install_instructions, author, doc_url)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, data)
+            conn.commit()
+        return redirect(url_for('manage_libraries'))
+    return render_template("add_library.html")
+
+@app.route('/admin/library/<int:lib_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_library(lib_id):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        if request.method == 'POST':
+            data = (
+                request.form['category'],
+                request.form['lib_name'],
+                request.form['lib_description'],
+                request.form['license'],
+                request.form['install_instructions'],
+                request.form['author'],
+                request.form['doc_url'],
+                lib_id
+            )
+            cursor.execute("""
+                UPDATE library SET category=?, lib_name=?, lib_description=?, license=?, install_instructions=?, author=?, doc_url=?
+                WHERE lib_id=?
+            """, data)
+            conn.commit()
+            return redirect(url_for('manage_libraries'))
+
+        cursor.execute("SELECT * FROM library WHERE lib_id = ?", (lib_id,))
+        library = cursor.fetchone()
+    return render_template("edit_library.html", library=library)
+
+@app.route('/admin/library/<int:lib_id>/delete', methods=['POST'])
+@login_required
+def delete_library(lib_id):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM library WHERE lib_id = ?", (lib_id,))
+        conn.commit()
+    return redirect(url_for('manage_libraries'))
+
+@app.route('/admin/function/add/<int:lib_id>', methods=['GET', 'POST'])
+@login_required
+def add_function(lib_id):
+    if request.method == 'POST':
+        data = (
+            request.form['func_name'],
+            request.form['source_code'],
+            request.form['func_description'],
+            lib_id
+        )
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO function (func_name, source_code, func_description, lib_id)
+                VALUES (?, ?, ?, ?)
+            """, data)
+            conn.commit()
+        return redirect(url_for('library_detail', lib_id=lib_id))
+    return render_template("add_function.html", lib_id=lib_id)
+
+@app.route('/admin/function/edit/<string:func_name>', methods=['GET', 'POST'])
+@login_required
+def edit_function(func_name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        if request.method == 'POST':
+            data = (
+                request.form['source_code'],
+                request.form['func_description'],
+                func_name
+            )
+            cursor.execute("""
+                UPDATE function SET source_code = ?, func_description = ?
+                WHERE func_name = ?
+            """, data)
+            conn.commit()
+            cursor.execute("SELECT lib_id FROM function WHERE func_name = ?", (func_name,))
+            lib_id = cursor.fetchone()[0]
+            return redirect(url_for('library_detail', lib_id=lib_id))
+
+        cursor.execute("SELECT * FROM function WHERE func_name = ?", (func_name,))
+        function = cursor.fetchone()
+    return render_template("edit_function.html", function=function)
+
+@app.route('/admin/function/delete/<string:func_name>', methods=['POST'])
+@login_required
+def delete_function(func_name):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT lib_id FROM function WHERE func_name = ?", (func_name,))
+        lib_id = cursor.fetchone()[0]
+        cursor.execute("DELETE FROM function WHERE func_name = ?", (func_name,))
+        conn.commit()
+    return redirect(url_for('library_detail', lib_id=lib_id))
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    submitted = False
+    if request.method == 'POST':
+        name = request.form.get('name')
+        message = request.form.get('message')
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO feedback (name, message) VALUES (?, ?)", (name, message))
+            conn.commit()
+
+        submitted = True
+
+    return render_template('feedback.html', submitted=submitted)
+
 
 # --- Run Flask Server ---
 if __name__ == "__main__":
     app.run(debug=True)
-
-

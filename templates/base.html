@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}PythonOverflow{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('home') }}">Home</a> |
+        <a href="{{ url_for('browse') }}">Browse</a> |
+        <a href="{{ url_for('feedback') }}">Feedback</a>
+        {% if current_user.is_authenticated %}
+            | <a href="{{ url_for('manage_libraries') }}">Admin Dashboard</a>
+            | Logged in as <strong>{{ current_user.id }}</strong>
+            | <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            | <a href="{{ url_for('login') }}">Admin Login</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+
+</html>

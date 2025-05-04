@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Manage Libraries{% endblock %}
+
+{% block content %}
+<h2>Admin: Manage Libraries</h2>
+<a href="{{ url_for('add_library') }}">➕ Add New Library</a>
+<hr>
+
+{% if libraries %}
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>License</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lib in libraries %}
+        <tr>
+            <td>{{ lib[0] }}</td>
+            <td>{{ lib[1] }}</td>
+            <td>{{ lib[2] }}</td>
+            <td>{{ lib[3] }}</td>
+            <td>
+                <a href="{{ url_for('edit_library', lib_id=lib[0]) }}">✏️ Edit</a> |
+                <form action="{{ url_for('delete_library', lib_id=lib[0]) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Are you sure?')">🗑 Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No libraries available.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Edit Function{% endblock %}
+{% block content %}
+<h2>Edit Function - {{ function.func_name }}</h2>
+<form method="POST">
+    <label>Function Name:</label><br>
+    <input type="text" name="func_name" value="{{ function.func_name }}" required><br>
+
+    <label>Description:</label><br>
+    <textarea name="func_description" rows="3" required>{{ function.func_description }}</textarea><br>
+
+    <label>Source Code (optional):</label><br>
+    <textarea name="source_code" rows="5">{{ function.source_code }}</textarea><br>
+
+    <label>Associated Library:</label><br>
+    <select name="lib_id" required>
+        {% for lib in libraries %}
+            <option value="{{ lib[0] }}" {% if lib[0] == function.lib_id %}selected{% endif %}>{{ lib[1] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Update Function</button>
+</form>
+<a href="/browse">⬅ Back to Browse</a>
+{% endblock %}

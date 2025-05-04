@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p>Welcome, {{ current_user.id }}! Here are your admin tools:</p>
+
+<ul>
+    <li><a href="{{ url_for('manage_libraries') }}">Manage Libraries</a></li>
+    <li><a href="{{ url_for('execute') }}">SQL Query Tool</a></li>
+</ul>
+
+<h2>Quick Links</h2>
+<ul>
+    <li><a href="{{ url_for('add_library') }}">Add New Library</a></li>
+    <li><a href="/browse">Browse Site as User</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+{% endblock %}

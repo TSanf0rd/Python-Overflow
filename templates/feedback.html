@@ -1,0 +1,23 @@
+<!-- templates/feedback.html -->
+{% extends "base.html" %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<h2>Feedback & Suggestions</h2>
+<p>Have a suggestion, spotted an issue, or want to request a new feature? Let us know below!</p>
+
+<form method="POST" action="/feedback">
+    <label for="name">Your Name (optional):</label><br>
+    <input type="text" id="name" name="name" style="width: 300px;"><br><br>
+
+    <label for="message">Your Feedback:</label><br>
+    <textarea id="message" name="message" rows="6" cols="60" required></textarea><br><br>
+
+    <button type="submit">Submit Feedback</button>
+</form>
+
+{% if submitted %}
+    <p style="color: green;"> Thank you! Your feedback was submitted.</p>
+{% endif %}
+{% endblock %}

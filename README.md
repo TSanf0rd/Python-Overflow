@@ -28,17 +28,48 @@ git clone https://github.com/your-username/pythonoverflow.git
 cd pythonoverflow
 ```
 
-2. **Run the install script**:
+### 2. Build the Docker Image
 ```bash
-./install.sh
+docker build -t pythonoverflow .
 ```
 > 💡 This will build the Docker image and start the app at [http://localhost:5000](http://localhost:5000)
 
+### 3. Run the Container
+```bash
+docker run -d -p 5000:5000 pythonoverflow
+```
+
+### 4. Open in Browser
+Visit: [http://localhost:5000](http://localhost:5000)
+
+## ⚙️ install.sh (for Linux/Mac)
+If you prefer a single-command setup:
+```bash
+./install.sh
+```
 ---
+This will:
+- Build the Docker image
+- Run the container
+- Launch the app at `http://localhost:5000`
 
-## 🔐 Admin Access
+## 📁 Database Information
 
-Visit [http://localhost:5000/login](http://localhost:5000/login) to log in as an admin.
+The application uses a SQLite database file named `library.db`.
+
+- ✅ This file contains all data used by the application — libraries, modules, versions, tags, and more.
+- 📦 It is bundled with the Docker image when you run `docker build`.
+- 🔄 If you want to start from scratch in the future, you could modify the app to run `init.sql` to rebuild `library.db` — but by default, the database is **preloaded with content**.
+- ⚠️ Do **not delete** or ignore `library.db` unless you intend to reinitialize the schema and populate it manually.
+
+## 👤 Admin Login
+To access the admin dashboard, log in via the [http://localhost:5000/login](http://localhost:5000/login) link.
+
+Default credentials (can be customized in code):
+```
+username: admin
+password: admin
+```
 
 ---
 
@@ -56,7 +87,6 @@ Visit [http://localhost:5000/login](http://localhost:5000/login) to log in as an
 ```
 
 ---
-
 
 ### ⚠️ Notes
 - The app runs on port 5000 by default. Ensure that port is not already in use.

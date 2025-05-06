@@ -9,44 +9,38 @@ PythonOverflow is a Flask-based web application that allows users to search, bro
 - Browse Python libraries by category, license, and tags
 - View detailed information including functions, modules, dependencies, and contributors
 - Search and filter by keyword
-- SQL admin panel for direct queries (admin only)
+- SQL admin panel for adding/editing/removing libraries, modules, and more
 - Related library suggestions based on tags
+- Supports Docker for easy deployment
 
 ---
 
-## 🛠 Project Setup
-
-> Clone and run the app locally on any machine with Python 3.7+
+## 🐳 Run with Docker
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/pythonoverflow.git
+git clone https://github.com/TSanf0rd/python-overflow.git
 cd pythonoverflow
 ```
-## 2. Set up virtual envronment 
+
+### 2. Build the Docker image
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+docker build -t pythonoverflow .
 ```
 
-### 3. Install the dependencies
+### 3. Run the container
 
 ```bash
-pip install -r requirements.txt
+docker run -d -p 5000:5000 pythonoverflow
 ```
 
-### 4. Initialize the database
-
+### 4. open your browser and go to:
 ```bash
-python run_init_sql.py
+http://localhost:5000
 ```
 
-### 5. Run the Flask app
-
-```bash
-python app.py
-```
-
-## Collaboration GuideLines 
+### ⚠️ Notes
+- The app runs on port 5000 by default. Ensure that port is not already in use.
+- Make sure Docker is installed and running.

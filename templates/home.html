@@ -3,11 +3,81 @@
 {% block title %}PythonOverflow Home{% endblock %}
 
 {% block content %}
-<h1>Welcome to PythonOverflow</h1>
-<p>This is a searchable database of Python libraries and built-in functions. Explore by category, filter by license, or examine relationships and dependencies.</p>
+<div style="padding: 2rem; max-width: 900px; margin: auto; text-align: center;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">🐍 Welcome to <span style="color: #007bff;">PythonOverflow</span></h1>
+    <p style="font-size: 1.2rem; color: #555;">
+        Your hub for exploring Python libraries and built-in functions. Browse by category, filter by license, and analyze relationships and dependencies between tools.
+    </p>
 
-<ul>
-    <li><a href="{{ url_for('browse') }}">Browse Libraries</a></li>
-    <li><a href="{{ url_for('execute') }}">SQL Tool (Admin)</a></li>
-</ul>
+    <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem;">
+        <a href="{{ url_for('browse') }}" class="home-button">🔍 Browse Libraries</a>
+        <a href="{{ url_for('feedback') }}" class="home-button">💬 Give Feedback</a>
+    </div>
+
+    <hr style="margin: 3rem 0;">
+
+    <h2 style="margin-bottom: 1rem;">🌟 Featured Libraries</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;">
+        <div class="featured-card">
+            <h3>Pandas</h3>
+            <p>Data analysis tools built on top of NumPy. Ideal for tabular data processing.</p>
+        </div>
+        <div class="featured-card">
+            <h3>NumPy</h3>
+            <p>Fast array computations and numerical operations—core for scientific computing.</p>
+        </div>
+        <div class="featured-card">
+            <h3>Matplotlib</h3>
+            <p>Comprehensive plotting library for creating static, animated, and interactive graphs.</p>
+        </div>
+    </div>
+
+    <hr style="margin: 3rem 0;">
+
+    <h2>📘 About PythonOverflow</h2>
+    <p style="font-size: 1rem; color: #666; max-width: 700px; margin: 0 auto;">
+        PythonOverflow is designed for developers, students, and researchers who want to quickly find, compare, and understand the tools available in the Python ecosystem.
+        Use this platform to stay organized, deepen your understanding, and power your projects with the right libraries.
+    </p>
+</div>
+
+<style>
+    .home-button {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .home-button:hover {
+        background-color: #0056b3;
+    }
+
+    .featured-card {
+        background-color: #f9f9f9;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        width: 250px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .featured-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .featured-card h3 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .featured-card p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+</style>
 {% endblock %}

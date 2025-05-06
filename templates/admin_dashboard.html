@@ -3,18 +3,59 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<h1>Admin Dashboard</h1>
-<p>Welcome, {{ current_user.id }}! Here are your admin tools:</p>
+<h1>📊 Admin Dashboard</h1>
+<p>Welcome, <strong>{{ current_user.id }}</strong>!</p>
 
-<ul>
-    <li><a href="{{ url_for('manage_libraries') }}">Manage Libraries</a></li>
-    <li><a href="{{ url_for('execute') }}">SQL Query Tool</a></li>
-</ul>
+<div class="dashboard-section">
+  <h2>Main Controls</h2>
+  <div class="dashboard-links">
+    <a href="{{ url_for('manage_libraries') }}" class="dashboard-btn">📚 Manage Libraries</a>
+    <a href="{{ url_for('manage_modules') }}" class="dashboard-btn">🧩 Manage Modules</a>
+    <a href="{{ url_for('execute') }}" class="dashboard-btn">🛠 SQL Query Tool</a>
+    <a href="{{ url_for('browse') }}" class="dashboard-btn">🔍 Browse as User</a>
+    <a href="{{ url_for('logout') }}" class="dashboard-btn logout">Logout</a>
+  </div>
+</div>
 
-<h2>Quick Links</h2>
-<ul>
-    <li><a href="{{ url_for('add_library') }}">Add New Library</a></li>
-    <li><a href="/browse">Browse Site as User</a></li>
-    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-</ul>
+<div class="dashboard-section">
+  <h2>Quick Actions</h2>
+  <div class="dashboard-links">
+    <a href="{{ url_for('add_library') }}" class="dashboard-btn highlight">➕ Add New Library</a>
+  </div>
+</div>
+
+<style>
+.dashboard-section {
+  margin-top: 2rem;
+}
+.dashboard-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.dashboard-btn {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+.dashboard-btn:hover {
+  background-color: #0b5ed7;
+}
+.dashboard-btn.logout {
+  background-color: #dc3545;
+}
+.dashboard-btn.logout:hover {
+  background-color: #bb2d3b;
+}
+.dashboard-btn.highlight {
+  background-color: #198754;
+}
+.dashboard-btn.highlight:hover {
+  background-color: #157347;
+}
+</style>
 {% endblock %}

@@ -7,6 +7,23 @@ from flask_login import (
     logout_user, current_user
 )
 
+def get_all_modules():
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                modules.mod_id, 
+                modules.mod_name, 
+                modules.mod_description, 
+                library.lib_name, 
+                modules.lib_id
+            FROM modules
+            JOIN library ON modules.lib_id = library.lib_id
+        """)
+        return cursor.fetchall()
+
+
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey123'
 login_manager = LoginManager()
@@ -329,6 +346,72 @@ def feedback():
         submitted = True
 
     return render_template('feedback.html', submitted=submitted)
+
+# --- Admin: Modules ---
+
+@app.route('/admin/modules')
+@login_required
+def manage_modules():
+    modules = get_all_modules()
+    return render_template("manage_modules.html", modules=modules)
+
+@app.route('/admin/module/<int:lib_id>/add', methods=['GET', 'POST'])
+@login_required
+def add_module(lib_id):
+    if request.method == 'POST':
+        data = (
+            request.form['mod_name'],
+            request.form['mod_code'],
+            request.form['mod_description'],
+            lib_id
+        )
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO modules (mod_name, mod_code, mod_description, lib_id)
+                VALUES (?, ?, ?, ?)
+            """, data)
+            conn.commit()
+        return redirect(url_for('library_detail', lib_id=lib_id))
+    return render_template("add_module.html", lib_id=lib_id)
+
+@app.route('/admin/module/<int:mod_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_module(mod_id):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        if request.method == 'POST':
+            data = (
+                request.form['mod_name'],
+                request.form['mod_code'],
+                request.form['mod_description'],
+                mod_id
+            )
+            cursor.execute("""
+                UPDATE modules
+                SET mod_name = ?, mod_code = ?, mod_description = ?
+                WHERE mod_id = ?
+            """, data)
+            conn.commit()
+            cursor.execute("SELECT lib_id FROM modules WHERE mod_id = ?", (mod_id,))
+            lib_id = cursor.fetchone()[0]
+            return redirect(url_for('library_detail', lib_id=lib_id))
+
+        cursor.execute("SELECT * FROM modules WHERE mod_id = ?", (mod_id,))
+        module = cursor.fetchone()
+    return render_template("edit_module.html", module=module)
+
+@app.route('/admin/module/delete', methods=['POST'])
+@login_required
+def delete_module(mod_id):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT lib_id FROM modules WHERE mod_id = ?", (mod_id,))
+        lib_id = cursor.fetchone()[0]
+        cursor.execute("DELETE FROM modules WHERE mod_id = ?", (mod_id,))
+        conn.commit()
+    return redirect(url_for('library_detail', lib_id=lib_id))
+
 
 
 # --- Run Flask Server ---

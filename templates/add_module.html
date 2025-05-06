@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add Module</h2>
+<form method="POST">
+    <label>Module Name:</label><br>
+    <input type="text" name="mod_name" required><br><br>
+
+    <label>Module Code:</label><br>
+    <textarea name="mod_code"></textarea><br><br>
+
+    <label>Description:</label><br>
+    <textarea name="mod_description" required></textarea><br><br>
+
+    <label>Library:</label><br>
+    <select name="lib_id" required>
+        {% for lib in libraries %}
+            <option value="{{ lib[0] }}">{{ lib[1] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <input type="submit" value="Add Module">
+</form>
+<a href="{{ url_for('library_detail', lib_id=lib_id) }}">⬅ Back to Library</a>
+{% endblock %}

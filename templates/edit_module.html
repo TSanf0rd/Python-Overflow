@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Module</h2>
+<form method="POST">
+    <label>Module Name:</label><br>
+    <input type="text" name="mod_name" value="{{ module[1] }}" required><br><br>
+    <label>Module Code:</label><br>
+    <textarea name="mod_code">{{ module[2] }}</textarea><br><br>
+    <label>Description:</label><br>
+    <textarea name="mod_description">{{ module[3] }}</textarea><br><br>
+    <button type="submit">Update Module</button>
+</form>
+<a href="{{ url_for('library_detail', lib_id=module[4]) }}">⬅ Back to Library</a>
+{% endblock %}

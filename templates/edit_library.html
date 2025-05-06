@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Library{% endblock %}
+
+{% block content %}
+<h2>Edit Library</h2>
+
+<form method="POST">
+    <label>Library Name:</label><br>
+    <input type="text" name="lib_name" value="{{ library[2] }}" required><br><br>
+
+    <label>Category:</label><br>
+    <input type="text" name="category" value="{{ library[1] }}" required><br><br>
+
+    <label>Description:</label><br>
+    <textarea name="lib_description" rows="4" cols="50" required>{{ library[3] }}</textarea><br><br>
+
+    <label>License:</label><br>
+    <input type="text" name="license" value="{{ library[4] }}" required><br><br>
+
+    <label>Install Instructions:</label><br>
+    <textarea name="install_instructions" rows="2" cols="50" required>{{ library[5] }}</textarea><br><br>
+
+    <label>Author:</label><br>
+    <input type="text" name="author" value="{{ library[6] }}" required><br><br>
+
+    <label>Documentation URL:</label><br>
+    <input type="url" name="doc_url" value="{{ library[7] }}"><br><br>
+
+    <input type="submit" value="Update Library">
+</form>
+
+<br>
+<a href="{{ url_for('manage_libraries') }}">⬅ Back to Admin Libraries</a>
+{% endblock %}

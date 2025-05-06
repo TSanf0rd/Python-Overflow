@@ -25,7 +25,7 @@
             <td>{{ lib[2] }}</td>
             <td>{{ lib[3] }}</td>
             <td>
-                <a href="{{ url_for('edit_library', lib_id=lib[0]) }}">✏️ Edit</a> |
+                <a href="{{ url_for('edit_library', lib_id=lib[0]) }}"> Edit</a> |
                 <form action="{{ url_for('delete_library', lib_id=lib[0]) }}" method="POST" style="display:inline;">
                     <button type="submit" onclick="return confirm('Are you sure?')">🗑 Delete</button>
                 </form>

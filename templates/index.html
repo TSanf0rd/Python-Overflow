@@ -12,13 +12,13 @@
     <form method="POST" action="{{ url_for('execute') }}">
         <textarea name="sql" rows="10" style="width: 100%; padding: 1rem; font-family: monospace; font-size: 1rem; border-radius: 0.5rem; border: 1px solid #ccc;">{{ query or '' }}</textarea><br>
         <button type="submit" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background-color: #007bff; color: white; font-weight: bold; border: none; border-radius: 0.5rem;">
-            ▶️ Run Query
+            ▶ Run Query
         </button>
     </form>
 
     {% if result %}
         <div style="margin-top: 2rem;">
-            <h3>✅ Result:</h3>
+            <h3>Result:</h3>
             {% if result is string %}
                 <pre style="background-color: #f8f9fa; padding: 1rem; border-radius: 0.5rem;">{{ result }}</pre>
             {% else %}

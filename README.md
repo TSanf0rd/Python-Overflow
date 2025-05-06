@@ -4,7 +4,7 @@ PythonOverflow is a Flask-based web application that allows users to search, bro
 
 ---
 
-## 🚀 Features
+##  Features
 
 - Browse Python libraries by category, license, and tags
 - View detailed information including functions, modules, dependencies, and contributors
@@ -57,12 +57,12 @@ This will:
 
 The application uses a SQLite database file named `library.db`.
 
-- ✅ This file contains all data used by the application — libraries, modules, versions, tags, and more.
-- 📦 It is bundled with the Docker image when you run `docker build`.
-- 🔄 If you want to start from scratch in the future, you could modify the app to run `init.sql` to rebuild `library.db` — but by default, the database is **preloaded with content**.
-- ⚠️ Do **not delete** or ignore `library.db` unless you intend to reinitialize the schema and populate it manually.
+-  This file contains all data used by the application — libraries, modules, versions, tags, and more.
+-  It is bundled with the Docker image when you run `docker build`.
+-  If you want to start from scratch in the future, you could modify the app to run `init.sql` to rebuild `library.db` — but by default, the database is **preloaded with content**.
+-  Do **not delete** or ignore `library.db` unless you intend to reinitialize the schema and populate it manually.
 
-## 👤 Admin Login
+##  Admin Login
 To access the admin dashboard, log in via the [http://localhost:5000/login](http://localhost:5000/login) link.
 
 Default credentials (can be customized in code):
@@ -94,7 +94,7 @@ password: adminpass
 
 ---
 
-## 📘 User Manual
+## User Manual
 
 ### Homepage
 ![image](https://github.com/user-attachments/assets/df012284-6d2f-43f6-a602-64ae24222e6c)
@@ -113,10 +113,10 @@ password: adminpass
 
 - Log in via `/login` as an admin.
 - Access:
-  - 📚 Manage Libraries
-  - 🧩 Manage Modules
-  - 🛠 SQL Query Tool
-  - 🔍 Browse as User
+  - Manage Libraries
+  -  Manage Modules
+  - SQL Query Tool
+  -  Browse as User
 
 ![image](https://github.com/user-attachments/assets/71eb11e0-97c3-4c18-a482-21432791f54c)
 
@@ -158,7 +158,7 @@ password: adminpass
 
 ---
 
-## 🔒 Security
+## Security
 ![image](https://github.com/user-attachments/assets/f73e1ab8-e921-42a0-8da4-b7d6c896162b)
 
 - Admin-only pages are protected using Flask-Login
@@ -166,12 +166,12 @@ password: adminpass
 
 ---
 
-## 🤝 Contributions
+## Contributions
 Feel free to fork the project, make improvements, and submit pull requests!
 
 ---
 
-## 📄 License
+## License
 This project is licensed under PythonOverflow
 
 

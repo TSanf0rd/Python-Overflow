@@ -68,7 +68,7 @@ To access the admin dashboard, log in via the [http://localhost:5000/login](http
 Default credentials (can be customized in code):
 ```
 username: admin
-password: admin
+password: adminpass
 ```
 
 ---
@@ -91,3 +91,88 @@ password: admin
 ### ⚠️ Notes
 - The app runs on port 5000 by default. Ensure that port is not already in use.
 - Make sure Docker is installed and running.
+
+---
+
+## 📘 User Manual
+
+### Homepage
+![image](https://github.com/user-attachments/assets/df012284-6d2f-43f6-a602-64ae24222e6c)
+
+- Navigate to [http://localhost:5000](http://localhost:5000)
+- Click **Browse Libraries** to explore existing libraries.
+
+### Browsing Libraries
+![image](https://github.com/user-attachments/assets/fa7a6220-b553-4f79-870d-c62173cc37b3)
+
+- View details, modules, and functions associated with each library.
+- Use the search/filter functions (if enabled).
+
+### Admin Dashboard
+![image](https://github.com/user-attachments/assets/982eef3d-9c01-4fe8-9bf6-ad4622df9904)
+
+- Log in via `/login` as an admin.
+- Access:
+  - 📚 Manage Libraries
+  - 🧩 Manage Modules
+  - 🛠 SQL Query Tool
+  - 🔍 Browse as User
+
+![image](https://github.com/user-attachments/assets/71eb11e0-97c3-4c18-a482-21432791f54c)
+
+### Adding a Library
+1. Navigate to **Admin Dashboard > Add Library**
+2. Fill in:
+   - Category
+   - Name
+   - Description
+   - License
+   - Install instructions
+   - Author
+   - Documentation URL
+3. Submit to save it to the database.
+
+### Adding a Module
+<img src="![Screenshot 2025-05-06 155324](https://github.com/user-attachments/assets/08b1b360-e0e6-4f38-a479-0623b5be5574)
+" alt="Admin Dashboard" width="600" height="400"/>
+
+![image](https://github.com/user-attachments/assets/439b08f4-82c3-4fd2-92d0-8a3a6c040fb5)
+
+1. Go to **Manage Modules** or a specific Library detail page.
+2. Click **Add Module**.
+3. Enter:
+   - Name, code (optional), and description
+   - Select a library from the dropdown list
+4. Submit to add.
+
+### SQL Admin Tool
+![image](https://github.com/user-attachments/assets/ad8ad01e-615c-4878-9102-c9df055861aa)
+
+- Visit `/execute`
+- Type any valid SQL query (e.g., `SELECT * FROM library;`)
+- View output in table format
+
+### Feedback Page
+![image](https://github.com/user-attachments/assets/a5cfacde-21ef-49c4-8350-5dc779263b4d)
+- Users can submit general feedback or suggestions via `/feedback`
+
+---
+
+## 🔒 Security
+![image](https://github.com/user-attachments/assets/f73e1ab8-e921-42a0-8da4-b7d6c896162b)
+
+- Admin-only pages are protected using Flask-Login
+- SQL injection is mitigated using parameterized queries
+
+---
+
+## 🤝 Contributions
+Feel free to fork the project, make improvements, and submit pull requests!
+
+---
+
+## 📄 License
+This project is licensed under PythonOverflow
+
+
+

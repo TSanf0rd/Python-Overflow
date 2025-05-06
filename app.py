@@ -221,24 +221,34 @@ def manage_libraries():
 @login_required
 def add_library():
     if request.method == 'POST':
-        data = (
-            request.form['category'],
-            request.form['lib_name'],
-            request.form['lib_description'],
-            request.form['license'],
-            request.form['install_instructions'],
-            request.form['author'],
-            request.form['doc_url']
-        )
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
+
+            # Get the current max lib_id
+            cursor.execute("SELECT MAX(lib_id) FROM library")
+            max_id = cursor.fetchone()[0]
+            new_lib_id = (max_id or 0) + 1
+
+            data = (
+                new_lib_id,
+                request.form['category'],
+                request.form['lib_name'],
+                request.form['lib_description'],
+                request.form['license'],
+                request.form['install_instructions'],
+                request.form['author'],
+                request.form['doc_url']
+            )
+
             cursor.execute("""
-                INSERT INTO library (category, lib_name, lib_description, license, install_instructions, author, doc_url)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO library (lib_id, category, lib_name, lib_description, license, install_instructions, author, doc_url)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, data)
             conn.commit()
         return redirect(url_for('manage_libraries'))
     return render_template("add_library.html")
+
+
 
 @app.route('/admin/library/<int:lib_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -355,25 +365,30 @@ def manage_modules():
     modules = get_all_modules()
     return render_template("manage_modules.html", modules=modules)
 
-@app.route('/admin/module/<int:lib_id>/add', methods=['GET', 'POST'])
+@app.route('/admin/module/add', methods=['GET', 'POST'])
 @login_required
-def add_module(lib_id):
-    if request.method == 'POST':
-        data = (
-            request.form['mod_name'],
-            request.form['mod_code'],
-            request.form['mod_description'],
-            lib_id
-        )
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
+def add_module():
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT lib_id, lib_name FROM library")
+        libraries = cursor.fetchall()
+
+        if request.method == 'POST':
+            data = (
+                request.form['mod_name'],
+                request.form['mod_code'],
+                request.form['mod_description'],
+                request.form['lib_id']
+            )
             cursor.execute("""
                 INSERT INTO modules (mod_name, mod_code, mod_description, lib_id)
                 VALUES (?, ?, ?, ?)
             """, data)
             conn.commit()
-        return redirect(url_for('library_detail', lib_id=lib_id))
-    return render_template("add_module.html", lib_id=lib_id)
+            return redirect(url_for('manage_modules'))
+
+    return render_template("add_module.html", libraries=libraries)
+
 
 @app.route('/admin/module/<int:mod_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -416,4 +431,4 @@ def delete_module(mod_id):
 
 # --- Run Flask Server ---
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
